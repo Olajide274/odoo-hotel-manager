@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hotel_room_type_receptionist,hotel.room.type receptionist,model_hotel_room_type,hotel_manager.group_hotel_receptionist,1,0,0,0
+access_hotel_room_type_manager,hotel.room.type manager,model_hotel_room_type,hotel_manager.group_hotel_manager,1,1,1,1
+access_hotel_room_receptionist,hotel.room receptionist,model_hotel_room,hotel_manager.group_hotel_receptionist,1,1,0,0
+access_hotel_room_manager,hotel.room manager,model_hotel_room,hotel_manager.group_hotel_manager,1,1,1,1
