@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="pricing_page" name="Hotel Manager Pricing">
+        <t t-call="website.layout">
+            <div id="wrap" class="hm-wrap">
+                <link rel="stylesheet" href="/hotel_manager/static/src/css/hotel_site.css"/>
+                <section class="hm-hero">
+                    <span class="hm-eyebrow">Hotel Manager</span>
+                    <h1>Run your hotel without the paperwork</h1>
+                    <p>Bookings, rooms, billing and reports in one place. Start free for 7 days, no card needed.</p>
+                </section>
+                <div class="hm-grid">
+                    <t t-foreach="cards" t-as="c">
+                        <div t-attf-class="hm-card #{'hm-reco' if c['recommended'] else ''}">
+                            <div t-if="c['recommended']" class="hm-badge">Recommended</div>
+                            <h3 t-out="c['name']"/>
+                            <p class="hm-desc" t-out="c['description']"/>
+                            <div class="hm-price">
+                                <span class="hm-amount" t-out="c['price']"/>
+                                <span class="hm-period" t-out="c['period']"/>
+                            </div>
+                            <div class="hm-setup" t-out="c['setup']"/>
+                            <ul class="hm-features">
+                                <li t-foreach="c['features']" t-as="f"
+                                    t-attf-class="#{'' if f['on'] else 'is-off'}" t-out="f['text']"/>
+                            </ul>
+                            <a t-attf-href="/hotel/signup?plan=#{c['code']}"
+                               t-attf-class="hm-btn #{'hm-btn-primary' if c['recommended'] else 'hm-btn-ghost'}"
+                               t-out="c['cta']"/>
+                        </div>
+                    </t>
+                </div>
+                <p class="hm-foot">Already have an account? <a href="/web/login">Log in</a></p>
+            </div>
+        </t>
+    </template>
+
+    <template id="signup_page" name="Hotel Manager Signup">
+        <t t-call="website.layout">
+            <div id="wrap" class="hm-wrap">
+                <link rel="stylesheet" href="/hotel_manager/static/src/css/hotel_site.css"/>
+                <div class="hm-signup-box">
+                    <h1>Set up your hotel</h1>
+                    <p class="hm-sub">Three quick steps and you're in.</p>
+
+                    <div t-if="not enabled" class="hm-panel hm-closed">
+                        <h2>Signups are by invitation for now</h2>
+                        <p>Get in touch and we will set up your hotel for you.</p>
+                        <a href="/hotel/pricing" class="hm-btn hm-btn-ghost">Back to plans</a>
+                    </div>
+
+                    <div t-else="" class="hm-panel">
+                        <ol class="hm-progress">
+                            <li class="is-active"><span>1</span>Hotel</li>
+                            <li><span>2</span>Account</li>
+                            <li><span>3</span>Plan</li>
+                        </ol>
+                        <div class="hm-bar"><div class="hm-bar-fill"/></div>
+                        <div t-if="error" class="hm-error" t-out="error"/>
+
+                        <form id="hm-signup-form" action="/hotel/signup/submit" method="post" novalidate="novalidate">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <div style="position:absolute;left:-9999px" aria-hidden="true">
+                                <input type="text" name="website_url" tabindex="-1" autocomplete="off"/>
+                            </div>
+
+                            <section class="hm-step is-active">
+                                <h2>Tell us about your hotel</h2>
+                                <p class="hm-hint">This is how guests and invoices will see you.</p>
+                                <div class="hm-field">
+                                    <label for="hotel_name">Hotel name</label>
+                                    <input id="hotel_name" name="hotel_name" required="required"
+                                           placeholder="e.g. Stan Lodge" t-att-value="values.get('hotel_name', '')"/>
+                                </div>
+                                <div class="hm-field">
+                                    <label for="phone">Phone number</label>
+                                    <input id="phone" name="phone" type="tel" required="required"
+                                           placeholder="e.g. 0803 000 0000" t-att-value="values.get('phone', '')"/>
+                                </div>
+                                <div class="hm-actions">
+                                    <span/>
+                                    <button type="button" class="hm-btn hm-btn-primary" data-next="1">Continue</button>
+                                </div>
+                            </section>
+
+                            <section class="hm-step">
+                                <h2>Create your login</h2>
+                                <p class="hm-hint">You will be the hotel manager and can add staff later.</p>
+                                <div class="hm-field">
+                                    <label for="contact_name">Your name</label>
+                                    <input id="contact_name" name="contact_name" required="required"
+                                           t-att-value="values.get('contact_name', '')"/>
+                                </div>
+                                <div class="hm-field">
+                                    <label for="email">Email</label>
+                                    <input id="email" name="email" type="email" required="required"
+                                           t-att-value="values.get('email', '')"/>
+                                    <small>You will use this to log in.</small>
+                                </div>
+                                <div class="hm-field">
+                                    <label for="password">Password</label>
+                                    <input id="password" name="password" type="password" required="required"
+                                           minlength="8" autocomplete="new-password"/>
+                                    <small>At least 8 characters.</small>
+                                </div>
+                                <div class="hm-actions">
+                                    <button type="button" class="hm-btn hm-btn-ghost" data-back="1">Back</button>
+                                    <button type="button" class="hm-btn hm-btn-primary" data-next="1">Continue</button>
+                                </div>
+                            </section>
+
+                            <section class="hm-step">
+                                <h2>Pick your starting plan</h2>
+                                <p class="hm-hint">You can change this any time.</p>
+                                <div class="hm-plans">
+                                    <label t-foreach="cards" t-as="c"
+                                           t-attf-class="hm-plan-opt #{'is-selected' if c['code'] == selected else ''}">
+                                        <input type="radio" name="plan_code" t-att-value="c['code']"
+                                               t-att-checked="'checked' if c['code'] == selected else None"/>
+                                        <span>
+                                            <strong t-out="c['name']"/>
+                                            <em t-if="c['recommended']" class="hm-reco-tag">Recommended</em>
+                                        </span>
+                                        <span class="hm-opt-price"><t t-out="c['price']"/><t t-out="c['period']"/></span>
+                                        <small t-out="c['summary']"/>
+                                    </label>
+                                </div>
+                                <div class="hm-note">
+                                    You start on the free trial today. Your chosen plan is saved, and you will
+                                    be asked to activate it before the trial ends.
+                                </div>
+                                <div class="hm-actions">
+                                    <button type="button" class="hm-btn hm-btn-ghost" data-back="1">Back</button>
+                                    <button type="submit" class="hm-btn hm-btn-primary">Create my hotel</button>
+                                </div>
+                            </section>
+                        </form>
+                        <script src="/hotel_manager/static/src/js/signup.js"></script>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

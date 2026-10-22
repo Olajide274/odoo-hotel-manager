@@ -42,3 +42,15 @@ class HotelRoom(models.Model):
         for room in self:
             if room.price_per_night < 0:
                 raise ValidationError('The price per night cannot be negative.')
+
+    @api.constrains('company_id', 'active')
+    def _check_plan_room_limit(self):
+        for company in self.mapped('company_id'):
+            plan = company.sudo().hotel_plan_id
+            if not plan or not plan.max_rooms:
+                continue  # no plan or unlimited
+            count = self.sudo().search_count([('company_id', '=', company.id)])
+            if count > plan.max_rooms:
+                raise ValidationError(
+                    f"Your {plan.name} plan allows {plan.max_rooms} rooms. "
+                    "Upgrade your plan to add more.")

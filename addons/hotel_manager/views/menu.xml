@@ -18,4 +18,7 @@
 
     <menuitem id="menu_hotel_room_type" name="Room Types" parent="menu_hotel_config"
               action="hotel_room_type_action" sequence="10"/>
+
+    <menuitem id="menu_hotel_plans" name="Plans" parent="menu_hotel_config"
+              action="hotel_plan_action" sequence="20"/>
 </odoo>

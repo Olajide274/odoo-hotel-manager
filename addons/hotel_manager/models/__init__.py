@@ -4,3 +4,6 @@ from . import booking
 from . import booking_charge
 from . import booking_billing
 from . import res_config_settings
+from . import hotel_plan
+from . import res_company
+from . import res_company_signup

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="plan_free" model="hotel.plan">
+            <field name="name">Free Trial</field>
+            <field name="code">free</field>
+            <field name="sequence">1</field>
+            <field name="max_rooms">8</field>
+            <field name="max_users">1</field>
+            <field name="trial_days">7</field>
+            <field name="price_monthly">0</field>
+            <field name="price_onetime">0</field>
+            <field name="description">7-day free trial to explore the system</field>
+        </record>
+
+        <record id="plan_starter" model="hotel.plan">
+            <field name="name">Starter</field>
+            <field name="code">starter</field>
+            <field name="sequence">10</field>
+            <field name="max_rooms">15</field>
+            <field name="max_users">2</field>
+            <field name="price_monthly">30000</field>
+            <field name="price_onetime">300000</field>
+            <field name="description">Perfect for small hotels and guesthouses</field>
+        </record>
+
+        <record id="plan_standard" model="hotel.plan">
+            <field name="name">Standard</field>
+            <field name="code">standard</field>
+            <field name="sequence">20</field>
+            <field name="max_rooms">0</field>
+            <field name="max_users">5</field>
+            <field name="has_custom_domain" eval="True"/>
+            <field name="has_full_reports" eval="True"/>
+            <field name="price_monthly">50000</field>
+            <field name="price_onetime">500000</field>
+            <field name="description">Best for most hotels</field>
+        </record>
+
+        <record id="plan_premium" model="hotel.plan">
+            <field name="name">Premium</field>
+            <field name="code">premium</field>
+            <field name="sequence">30</field>
+            <field name="max_rooms">0</field>
+            <field name="max_users">0</field>
+            <field name="has_custom_domain" eval="True"/>
+            <field name="has_full_reports" eval="True"/>
+            <field name="has_priority_support" eval="True"/>
+            <field name="has_custom_branding" eval="True"/>
+            <field name="price_monthly">100000</field>
+            <field name="price_onetime">1000000</field>
+            <field name="description">For growing and multi-location hotels</field>
+        </record>
+    </data>
+</odoo>
