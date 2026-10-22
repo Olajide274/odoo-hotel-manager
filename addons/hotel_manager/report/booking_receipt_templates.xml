@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_booking_receipt">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Booking Receipt</h2>
+                        <p>
+                            <strong>Reference:</strong> <span t-field="doc.name"/><br/>
+                            <strong>Guest:</strong> <span t-field="doc.guest_name"/><br/>
+                            <strong>Phone:</strong> <span t-field="doc.guest_phone"/><br/>
+                            <strong>Email:</strong> <span t-field="doc.guest_email"/>
+                        </p>
+                        <table class="table table-sm o_main_table">
+                            <thead>
+                                <tr>
+                                    <th>Room</th>
+                                    <th>Check-in</th>
+                                    <th>Check-out</th>
+                                    <th>Nights</th>
+                                    <th class="text-end">Price / night</th>
+                                    <th class="text-end">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span t-field="doc.room_id"/></td>
+                                    <td><span t-field="doc.check_in"/></td>
+                                    <td><span t-field="doc.check_out"/></td>
+                                    <td><span t-field="doc.nights"/></td>
+                                    <td class="text-end">
+                                        <span t-field="doc.price_per_night"
+                                              t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="doc.total_price"
+                                              t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <t t-if="doc.charge_ids">
+                            <h4 class="mt-4">Extra Charges</h4>
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Description</th>
+                                        <th class="text-end">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="doc.charge_ids" t-as="charge">
+                                        <td><span t-field="charge.name"/></td>
+                                        <td class="text-end">
+                                            <span t-field="charge.amount"
+                                                  t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
+
+                        <div class="mt-4 text-end">
+                            <h3>
+                                Grand Total:
+                                <span t-field="doc.total_price"
+                                      t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                            </h3>
+                            <p>Status: <span t-field="doc.state"/></p>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

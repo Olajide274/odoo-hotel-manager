@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hotel_booking_view_pivot" model="ir.ui.view">
+        <field name="name">hotel.booking.pivot</field>
+        <field name="model">hotel.booking</field>
+        <field name="arch" type="xml">
+            <pivot string="Revenue" sample="1">
+                <field name="check_in" type="row" interval="day"/>
+                <field name="room_type_id" type="col"/>
+                <field name="total_price" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="hotel_booking_view_graph" model="ir.ui.view">
+        <field name="name">hotel.booking.graph</field>
+        <field name="model">hotel.booking</field>
+        <field name="arch" type="xml">
+            <graph string="Revenue" type="bar" sample="1">
+                <field name="check_in" type="row" interval="day"/>
+                <field name="total_price" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="hotel_booking_action_revenue" model="ir.actions.act_window">
+        <field name="name">Daily Revenue</field>
+        <field name="res_model">hotel.booking</field>
+        <field name="view_mode">pivot,graph,list</field>
+        <field name="domain">[('state', 'in', ('confirmed', 'checked_in', 'checked_out'))]</field>
+        <field name="context">{'search_default_filter_checked_out': 1}</field>
+    </record>
+</odoo>

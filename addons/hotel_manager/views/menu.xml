@@ -2,12 +2,20 @@
 <odoo>
     <menuitem id="menu_hotel_root" name="Hotel" sequence="10"
               groups="group_hotel_receptionist"/>
+
     <menuitem id="menu_hotel_bookings" name="Bookings" parent="menu_hotel_root"
               action="hotel_booking_action" sequence="5"/>
+
     <menuitem id="menu_hotel_rooms" name="Rooms" parent="menu_hotel_root"
               action="hotel_room_action" sequence="10"/>
+
+    <menuitem id="menu_hotel_revenue" name="Daily Revenue" parent="menu_hotel_root"
+              action="hotel_booking_action_revenue" sequence="20"
+              groups="group_hotel_manager"/>
+
     <menuitem id="menu_hotel_config" name="Configuration" parent="menu_hotel_root"
               sequence="90" groups="group_hotel_manager"/>
+
     <menuitem id="menu_hotel_room_type" name="Room Types" parent="menu_hotel_config"
               action="hotel_room_type_action" sequence="10"/>
 </odoo>
