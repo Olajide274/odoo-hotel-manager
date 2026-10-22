@@ -15,6 +15,7 @@ class HotelBookingController(http.Controller):
         rooms = request.env['hotel.room'].sudo().search([
             ('status', '=', 'available'),
             ('active', '=', True),
+            ('company_id', '=', request.website.company_id.id),
         ])
         return request.render('hotel_manager.booking_form_template', {
             'rooms': rooms,
@@ -45,6 +46,7 @@ class HotelBookingController(http.Controller):
                 'guest_email': guest_email,
                 'guest_phone': guest_phone,
                 'room_id': room.id,
+                'company_id': room.company_id.id,
                 'check_in': check_in,
                 'check_out': check_out,
                 'state': 'draft',

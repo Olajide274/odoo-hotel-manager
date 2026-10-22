@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class HotelPlan(models.Model):
@@ -34,3 +34,12 @@ class HotelPlan(models.Model):
     trial_days = fields.Integer(string='Trial Days', default=0)
 
     description = fields.Text()
+
+    max_rooms_display = fields.Char(string='Max Rooms', compute='_compute_limit_display')
+    max_users_display = fields.Char(string='Max Users', compute='_compute_limit_display')
+
+    @api.depends('max_rooms', 'max_users')
+    def _compute_limit_display(self):
+        for p in self:
+            p.max_rooms_display = str(p.max_rooms) if p.max_rooms else 'Unlimited'
+            p.max_users_display = str(p.max_users) if p.max_users else 'Unlimited'

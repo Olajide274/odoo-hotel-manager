@@ -8,8 +8,8 @@
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="code"/>
-                <field name="max_rooms"/>
-                <field name="max_users"/>
+                <field name="max_rooms_display"/>
+                <field name="max_users_display"/>
                 <field name="price_monthly"/>
                 <field name="price_onetime"/>
                 <field name="trial_days"/>

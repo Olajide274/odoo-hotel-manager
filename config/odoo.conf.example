@@ -1,0 +1,6 @@
+[options]
+addons_path = /mnt/extra-addons
+data_dir = /var/lib/odoo
+admin_passwd = CHANGE_ME
+list_db = False
+; behind a reverse proxy in production also set: proxy_mode = True

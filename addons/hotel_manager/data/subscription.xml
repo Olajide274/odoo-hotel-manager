@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="cron_hotel_trial_reminders" model="ir.cron">
+        <field name="name">Hotel: trial expiry reminders</field>
+        <field name="model_id" ref="base.model_res_company"/>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_hotel_trial_reminders()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+    </record>
+
+    <record id="action_hotel_subscription" model="ir.actions.server">
+        <field name="name">My Plan</field>
+        <field name="model_id" ref="base.model_res_company"/>
+        <field name="state">code</field>
+        <field name="code">action = env.company.hotel_subscription_notification()</field>
+    </record>
+
+    <menuitem id="menu_hotel_subscription" name="My Plan" parent="menu_hotel_root"
+              action="action_hotel_subscription" sequence="80"
+              groups="group_hotel_receptionist"/>
+</odoo>

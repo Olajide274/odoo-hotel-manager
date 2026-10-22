@@ -7,3 +7,5 @@ from . import res_config_settings
 from . import hotel_plan
 from . import res_company
 from . import res_company_signup
+from . import room_type_company
+from . import booking_expiry

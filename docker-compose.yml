@@ -6,7 +6,7 @@ services:
       POSTGRES_PASSWORD: odoo
       POSTGRES_DB: postgres
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"
     volumes:
       - db-data:/var/lib/postgresql/data
     healthcheck:
@@ -16,6 +16,7 @@ services:
       retries: 20
   odoo:
     image: odoo:18.0
+    command: ["odoo", "-d", "Dev", "--db-filter=^Dev$"]
     network_mode: host
     depends_on:
       db:
@@ -26,6 +27,7 @@ services:
       PASSWORD: odoo
     volumes:
       - ./addons:/mnt/extra-addons
+      - ./config/odoo.conf:/etc/odoo/odoo.conf:ro
       - odoo-data:/var/lib/odoo
 volumes:
   db-data:

@@ -9,6 +9,7 @@
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',
+        'security/hotel_rules.xml',
         'data/sequence.xml',
         'data/hotel_plan_data.xml',
         'views/room_type_views.xml',
@@ -25,6 +26,7 @@
         'views/hotel_plan_views.xml',
         'views/pricing_signup_templates.xml',
         'views/menu.xml',
+        'data/subscription.xml',
     ],
     'demo': [
         'data/demo_data.xml',

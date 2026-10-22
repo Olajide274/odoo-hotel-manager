@@ -1,9 +1,26 @@
+import logging
 import re
+import time
+from collections import defaultdict, deque
 
 from odoo import SUPERUSER_ID, http
 from odoo.exceptions import UserError
 from odoo.http import request
 
+_logger = logging.getLogger(__name__)
+_SIGNUP_HITS = defaultdict(deque)
+SIGNUP_LIMIT, SIGNUP_WINDOW = 10, 3600
+
+
+def _rate_limited(ip):
+    now = time.time()
+    q = _SIGNUP_HITS[ip]
+    while q and now - q[0] > SIGNUP_WINDOW:
+        q.popleft()
+    if len(q) >= SIGNUP_LIMIT:
+        return True
+    q.append(now)
+    return False
 EMAIL_RE = re.compile(r'^[^@\s]+@[^@\s]+\.[^@\s]+$')
 
 
@@ -93,10 +110,19 @@ class HotelSignup(http.Controller):
             'hotel_plan_id': free.id,
             'hotel_requested_plan_id': requested.id,
         }
+        nigeria = env.ref('base.ng', raise_if_not_found=False)
+        if nigeria:
+            company_vals['country_id'] = nigeria.id
         ngn = env.ref('base.NGN', raise_if_not_found=False)
         if ngn:
             company_vals['currency_id'] = ngn.id
         company = env['res.company'].create(company_vals)
+        try:
+            with env.cr.savepoint():
+                env['account.chart.template'].with_company(company).try_loading(
+                    'ng', company=company, install_demo=False)
+        except Exception:
+            _logger.exception('Chart of accounts not loaded for %s', company.name)
 
         manager = env.ref('hotel_manager.group_hotel_manager')
         internal = env.ref('base.group_user')
@@ -108,6 +134,7 @@ class HotelSignup(http.Controller):
             'company_id': company.id,
             'company_ids': [(6, 0, [company.id])],
             'groups_id': [(6, 0, [internal.id, manager.id])],
+            'action_id': env.ref('hotel_manager.hotel_booking_action').id,
         })
         return company
 
@@ -125,6 +152,9 @@ class HotelSignup(http.Controller):
     def signup_submit(self, **post):
         if post.get('website_url'):  # honeypot field, humans leave it empty
             return request.redirect('/hotel/pricing')
+        if _rate_limited(request.httprequest.remote_addr):
+            return request.render('hotel_manager.signup_page', self._signup_ctx(
+                None, post.get('plan_code'), 'Too many sign-up attempts. Please try again in an hour.'))
         keys = ('hotel_name', 'phone', 'contact_name', 'email', 'plan_code')
         values = {k: (post.get(k) or '').strip()[:200] for k in keys}
         values['email'] = values['email'].lower()
