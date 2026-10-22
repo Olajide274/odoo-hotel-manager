@@ -3,3 +3,4 @@ from . import room
 from . import booking
 from . import booking_charge
 from . import booking_billing
+from . import res_config_settings

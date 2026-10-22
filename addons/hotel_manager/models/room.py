@@ -12,8 +12,10 @@ class HotelRoom(models.Model):
     company_id = fields.Many2one(
         'res.company', required=True, default=lambda self: self.env.company)
     currency_id = fields.Many2one(
-        'res.currency', required=True,
-        default=lambda self: self.env.company.currency_id)
+        'res.currency',
+        required=True,
+        default=lambda self: self.env.ref('base.NGN', raise_if_not_found=False) or self.env.company.currency_id,
+    )
     price_per_night = fields.Monetary(
         currency_field='currency_id',
         compute='_compute_price_per_night', store=True, readonly=False)

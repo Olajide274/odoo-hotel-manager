@@ -21,8 +21,10 @@ class HotelBooking(models.Model):
     company_id = fields.Many2one(
         'res.company', required=True, default=lambda self: self.env.company)
     currency_id = fields.Many2one(
-        'res.currency', required=True,
-        default=lambda self: self.env.company.currency_id)
+        'res.currency',
+        required=True,
+        default=lambda self: self.env.ref('base.NGN', raise_if_not_found=False) or self.env.company.currency_id,
+    )
     check_in = fields.Date(required=True, default=fields.Date.context_today)
     check_out = fields.Date(
         required=True,

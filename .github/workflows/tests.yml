@@ -1,0 +1,52 @@
+name: Hotel Manager Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: odoo
+          POSTGRES_PASSWORD: odoo
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Odoo dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libxml2-dev libxslt1-dev libldap2-dev libsasl2-dev libpq-dev
+
+      - name: Run tests with official Odoo image
+        run: |
+          docker run --rm --network host \
+            -v ${{ github.workspace }}/addons:/mnt/extra-addons \
+            -e HOST=localhost \
+            -e USER=odoo \
+            -e PASSWORD=odoo \
+            odoo:18.0 \
+            odoo -d test_hotel \
+              --db_host=localhost --db_user=odoo --db_password=odoo \
+              -i hotel_manager \
+              --test-enable --test-tags /hotel_manager \
+              --stop-after-init --http-port=8070

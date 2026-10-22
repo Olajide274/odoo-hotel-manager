@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="booking_form_template" name="Hotel Booking Form">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure">
+
+                <!-- Hero -->
+                <section class="pt56 pb56" style="background: linear-gradient(135deg, #0f2744 0%, #1e4e8c 100%);">
+                    <div class="container text-center text-white">
+                        <h1 class="display-5 fw-bold mb-2">Book Your Stay</h1>
+                        <p class="lead opacity-75 mb-0">Fast, secure online booking</p>
+                    </div>
+                </section>
+
+                <div class="container py-5">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-6 col-md-8">
+
+                            <!-- Messages -->
+                            <t t-if="error">
+                                <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+                                    <t t-if="error == 'missing_fields'">Please fill in all required fields.</t>
+                                    <t t-elif="error == 'room_unavailable'">Sorry, that room is no longer available.</t>
+                                    <t t-elif="error == 'payment_pending'">Payment is still processing. You will get a confirmation email soon.</t>
+                                    <t t-else="">Something went wrong. Please try again.</t>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"/>
+                                </div>
+                            </t>
+
+                            <t t-if="success">
+                                <div class="card border-0 shadow-sm mb-4">
+                                    <div class="card-body text-center py-5">
+                                        <div class="mb-3" style="font-size: 3rem;">✅</div>
+                                        <h3 class="text-success mb-2">Booking Received!</h3>
+                                        <p class="mb-1">Reference: <strong t-esc="request.params.get('ref')"/></p>
+                                        <p class="text-muted mb-0">We will confirm as soon as payment is verified.</p>
+                                    </div>
+                                </div>
+                            </t>
+
+                            <!-- Form Card -->
+                            <div class="card border-0 shadow">
+                                <div class="card-body p-4 p-md-5">
+                                    <form action="/hotel/book/submit" method="post">
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                                        <div class="mb-3">
+                                            <label class="form-label fw-semibold">Full Name *</label>
+                                            <input type="text" name="guest_name" class="form-control form-control-lg"
+                                                   placeholder="Chioma Adeyemi" required="required"/>
+                                        </div>
+
+                                        <div class="row g-3 mb-3">
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-semibold">Email *</label>
+                                                <input type="email" name="guest_email" class="form-control form-control-lg"
+                                                       placeholder="you@email.com" required="required"/>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-semibold">Phone</label>
+                                                <input type="tel" name="guest_phone" class="form-control form-control-lg"
+                                                       placeholder="0803 000 0000"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label fw-semibold">Room *</label>
+                                            <select name="room_id" class="form-select form-select-lg" required="required">
+                                                <option value="">Select a room</option>
+                                                <t t-foreach="rooms" t-as="room">
+                                                    <option t-att-value="room.id">
+                                                        <t t-esc="room.name"/> · <t t-esc="room.room_type_id.name"/>
+                                                        — ₦<t t-esc="'{:,.0f}'.format(room.price_per_night or 0)"/>/night
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+
+                                        <div class="row g-3 mb-4">
+                                            <div class="col-6">
+                                                <label class="form-label fw-semibold">Check-in *</label>
+                                                <input type="date" name="check_in" class="form-control form-control-lg" required="required"/>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label fw-semibold">Check-out *</label>
+                                                <input type="date" name="check_out" class="form-control form-control-lg" required="required"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="d-grid">
+                                            <button type="submit" class="btn btn-primary btn-lg py-3 fw-semibold">
+                                                Continue to Payment
+                                            </button>
+                                        </div>
+
+                                        <p class="text-center text-muted small mt-3 mb-0">
+                                            🔒 Secure payment by Paystack
+                                        </p>
+                                    </form>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>
