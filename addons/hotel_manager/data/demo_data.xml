@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <!-- Room Types -->
         <record id="room_type_standard" model="hotel.room.type">
             <field name="name">Standard</field>
             <field name="price_per_night">25000</field>
@@ -15,7 +14,6 @@
             <field name="price_per_night">75000</field>
         </record>
 
-        <!-- Rooms -->
         <record id="room_101" model="hotel.room">
             <field name="name">101</field>
             <field name="room_type_id" ref="room_type_standard"/>
