@@ -12,6 +12,6 @@ class HotelBookingExpiry(models.Model):
             company = Company.browse(vals['company_id']) if vals.get('company_id') else self.env.company.sudo()
             if company._hotel_trial_expired():
                 raise UserError(_(
-                    'Your free trial ended on %s. Please upgrade your plan (/hotel/pricing) to create new bookings.'
+                    'Your free trial ended on %s. Please upgrade your plan (/hotel/upgrade) to create new bookings.'
                 ) % company.trial_end_date)
         return super().create(vals_list)

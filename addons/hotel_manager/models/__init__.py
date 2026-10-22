@@ -9,3 +9,4 @@ from . import res_company
 from . import res_company_signup
 from . import room_type_company
 from . import booking_expiry
+from . import subscription_payment

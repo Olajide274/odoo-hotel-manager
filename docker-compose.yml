@@ -16,7 +16,7 @@ services:
       retries: 20
   odoo:
     image: odoo:18.0
-    command: ["odoo", "-d", "Dev", "--db-filter=^Dev$"]
+    command: ["odoo", "-d", "Dev", "--db-filter=^Dev$", "--no-database-list"]
     network_mode: host
     depends_on:
       db:

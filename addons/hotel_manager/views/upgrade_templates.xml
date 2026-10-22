@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="upgrade_page" name="Hotel: upgrade plan">
+        <t t-call="website.layout">
+            <div id="wrap" class="container py-5">
+                <h1>Choose your plan</h1>
+                <p t-if="error" class="alert alert-danger" t-out="error"/>
+                <p>Current plan: <b t-out="company.hotel_plan_id.name or 'None'"/>
+                    <t t-if="company.hotel_paid_until"> (paid until <span t-out="company.hotel_paid_until"/>)</t></p>
+                <div class="row">
+                    <div t-foreach="plans" t-as="p" class="col-md-4 mb-3">
+                        <div class="card h-100"><div class="card-body">
+                            <h4 t-out="p.name"/>
+                            <p t-out="p.description"/>
+                            <p><b>₦<span t-out="'{:,.0f}'.format(p.price_monthly)"/></b> / month
+                                <t t-if="first and p.price_onetime"><br/>+ ₦<span t-out="'{:,.0f}'.format(p.price_onetime)"/> one-time setup</t></p>
+                            <a t-attf-href="/hotel/subscribe/#{p.code}" class="btn btn-primary">Pay with Paystack</a>
+                        </div></div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

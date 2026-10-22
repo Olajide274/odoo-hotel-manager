@@ -2,10 +2,19 @@ import hashlib
 import hmac
 import json
 import logging
+import re
+import uuid
+
+import requests
 from odoo import http, fields
 from odoo.http import request
 
 _logger = logging.getLogger(__name__)
+
+
+def _booking_id(reference):
+    m = re.match(r'^BK-(\d+)-[0-9a-f]{8}$', reference or '')
+    return int(m.group(1)) if m else 0
 
 
 class HotelBookingController(http.Controller):
@@ -67,17 +76,19 @@ class HotelBookingController(http.Controller):
         base_url = ICP.get_param('web.base.url').rstrip('/')
 
         if not secret_key or not public_key:
-            # Fallback: just confirm the draft booking if Paystack is not configured
+            if ICP.get_param('hotel_manager.allow_unpaid_booking') != 'True':
+                return request.redirect('/hotel/book?error=payment_unavailable')
             booking.action_confirm()
             return request.redirect('/hotel/book?success=1&ref=%s' % booking.name)
 
-        amount_kobo = int(booking.total_price * 100)  # Paystack expects kobo
+        amount_kobo = round(booking.total_price * 100)  # Paystack expects kobo
+        reference = 'BK-%d-%s' % (booking.id, uuid.uuid4().hex[:8])
 
         payload = {
             'email': booking.guest_email,
             'amount': amount_kobo,
             'currency': 'NGN',
-            'reference': booking.name,
+            'reference': reference,
             'callback_url': f'{base_url}/hotel/book/callback',
             'metadata': {
                 'booking_id': booking.id,
@@ -85,74 +96,27 @@ class HotelBookingController(http.Controller):
             },
         }
 
-        # In real use you would call Paystack initialize API here.
-        # For the addon we store the intent and let the frontend or a simple redirect handle it.
-        # For simplicity in this phase we confirm on webhook only.
-        booking.message_post(body="Paystack payment initiated.")
-        return request.redirect(
-            f'https://checkout.paystack.com/{public_key}'  # placeholder – real flow uses initialize API
-        )
-
-    @http.route('/hotel/book/webhook', type='json', auth='public', methods=['POST'], csrf=False)
-    def paystack_webhook(self, **kwargs):
-        """Paystack webhook – must verify signature."""
-        payload = request.httprequest.get_data()
-        signature = request.httprequest.headers.get('x-paystack-signature', '')
-
-        ICP = request.env['ir.config_parameter'].sudo()
-        secret = ICP.get_param('hotel_manager.paystack_secret_key') or ''
-
-        computed = hmac.new(
-            secret.encode('utf-8'),
-            payload,
-            hashlib.sha512
-        ).hexdigest()
-
-        if not hmac.compare_digest(computed, signature):
-            _logger.warning("Paystack webhook: invalid signature")
-            return {'status': 'invalid signature'}
-
         try:
-            data = json.loads(payload)
+            resp = requests.post(
+                'https://api.paystack.co/transaction/initialize', json=payload,
+                headers={'Authorization': 'Bearer %s' % secret_key}, timeout=15)
+            body = resp.json()
+            auth_url = (body.get('data') or {}).get('authorization_url') if body.get('status') else None
         except Exception:
-            return {'status': 'bad json'}
+            _logger.exception('Paystack initialize failed')
+            auth_url = None
+        if not auth_url:
+            return request.redirect('/hotel/book?error=payment_unavailable')
+        booking.message_post(body='Paystack payment initiated (%s).' % reference)
+        return request.redirect(auth_url, local=False)
 
-        event = data.get('event')
-        if event != 'charge.success':
-            return {'status': 'ignored'}
-
-        reference = data.get('data', {}).get('reference')
-        if not reference:
-            return {'status': 'no reference'}
-
-        booking = request.env['hotel.booking'].sudo().search([
-            ('name', '=', reference),
-            ('state', '=', 'draft'),
-        ], limit=1)
-
-        if not booking:
-            _logger.warning("Paystack webhook: booking %s not found or not draft", reference)
-            return {'status': 'booking not found'}
-
-        # Confirm booking + create invoice/payment (re-use existing billing methods)
-        booking.action_confirm()
-        if hasattr(booking, 'action_create_invoice'):
-            booking.action_create_invoice()
-        if hasattr(booking, 'action_register_payment'):
-            booking.action_register_payment()
-
-        booking.message_post(body="Payment confirmed via Paystack webhook.")
-        _logger.info("Paystack webhook: booking %s confirmed", booking.name)
-        return {'status': 'ok'}
 
     @http.route('/hotel/book/callback', type='http', auth='public', website=True)
     def paystack_callback(self, **kwargs):
         """Guest returns here after Paystack checkout."""
         reference = kwargs.get('reference') or kwargs.get('trxref')
         if reference:
-            booking = request.env['hotel.booking'].sudo().search([
-                ('name', '=', reference)
-            ], limit=1)
+            booking = request.env['hotel.booking'].sudo().browse(_booking_id(reference)).exists()
             if booking and booking.state in ('confirmed', 'checked_in'):
                 return request.redirect('/hotel/book?success=1&ref=%s' % booking.name)
         return request.redirect('/hotel/book?error=payment_pending')

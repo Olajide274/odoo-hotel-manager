@@ -71,18 +71,18 @@ class ResCompany(models.Model):
         state = self.hotel_subscription_state
         if state == 'expired':
             title, kind = 'Free trial ended', 'danger'
-            msg = 'Your free trial ended on %s. New bookings are blocked until you upgrade. %%s' % self.trial_end_date
+            msg = 'Your free trial ended on %s. New bookings are blocked until you upgrade.' % self.trial_end_date
         elif state == 'trial':
             left = (self.trial_end_date - today).days if self.trial_end_date else 0
             title, kind = 'Free trial', ('warning' if left <= 3 else 'info')
-            msg = 'Your free trial has %d day(s) left (ends %s). %%s' % (left, self.trial_end_date)
+            msg = 'Your free trial has %d day(s) left (ends %s).' % (left, self.trial_end_date)
         else:
             title, kind = 'Subscription', 'success'
-            msg = 'Your %s plan is active. %%s' % (self.hotel_plan_id.name or 'current')
+            msg = 'Your %s plan is active.' % (self.hotel_plan_id.name or 'current')
         return {
             'type': 'ir.actions.client', 'tag': 'display_notification',
             'params': {'title': title, 'message': msg, 'type': kind, 'sticky': True,
-                       'links': [{'label': 'View plans', 'url': '/hotel/pricing'}]},
+                       'links': [{'label': 'View plans', 'url': '/hotel/upgrade'}]},
         }
 
     @api.model
@@ -105,7 +105,7 @@ class ResCompany(models.Model):
                 else:
                     subject = 'Your free trial has ended'
                 body = ('<p>Hello,</p><p>%s for <b>%s</b> (trial end date: %s).</p>'
-                        '<p><a href="%s/hotel/pricing">Choose a plan</a> to keep creating bookings.</p>'
+                        '<p><a href="%s/hotel/upgrade">Choose a plan</a> to keep creating bookings.</p>'
                         % (subject, html_escape(company.name), company.trial_end_date, base))
                 try:
                     with self.env.cr.savepoint():

@@ -27,6 +27,7 @@
         'views/pricing_signup_templates.xml',
         'views/menu.xml',
         'data/subscription.xml',
+        'views/upgrade_templates.xml',
     ],
     'demo': [
         'data/demo_data.xml',
