@@ -16,7 +16,7 @@ class TestHotelRoom(TransactionCase):
             'name': 'Deluxe', 'price_per_night': 50000, 'capacity': 2,
         })
         cls.room = cls.env['hotel.room'].create({
-            'name': '101', 'room_type_id': cls.room_type.id,
+            'name': 'T101', 'room_type_id': cls.room_type.id,
         })
         cls.manager = new_test_user(
             cls.env, login='hm_manager',
@@ -35,7 +35,7 @@ class TestHotelRoom(TransactionCase):
     def test_duplicate_room_name_rejected(self):
         with self.assertRaises(IntegrityError), mute_logger('odoo.sql_db'):
             self.env['hotel.room'].create({
-                'name': '101', 'room_type_id': self.room_type.id,
+                'name': 'T101', 'room_type_id': self.room_type.id,
             })
 
     def test_negative_price_rejected(self):
@@ -44,14 +44,14 @@ class TestHotelRoom(TransactionCase):
 
     def test_receptionist_can_read_and_update_status(self):
         room = self.room.with_user(self.receptionist)
-        self.assertEqual(room.name, '101')
+        self.assertEqual(room.name, 'T101')
         room.status = 'occupied'
         self.assertEqual(self.room.status, 'occupied')
 
     def test_receptionist_cannot_create_room_or_edit_type(self):
         with self.assertRaises(AccessError):
             self.env['hotel.room'].with_user(self.receptionist).create({
-                'name': '102', 'room_type_id': self.room_type.id,
+                'name': 'T102', 'room_type_id': self.room_type.id,
             })
         with self.assertRaises(AccessError):
             self.room_type.with_user(self.receptionist).name = 'Hacked'
@@ -61,6 +61,6 @@ class TestHotelRoom(TransactionCase):
             'name': 'Suite', 'price_per_night': 120000,
         })
         room = self.env['hotel.room'].with_user(self.manager).create({
-            'name': '201', 'room_type_id': rtype.id,
+            'name': 'T201', 'room_type_id': rtype.id,
         })
         self.assertEqual(room.price_per_night, 120000)

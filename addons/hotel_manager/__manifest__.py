@@ -1,6 +1,6 @@
 {
     'name': 'Hotel Manager',
-    'version': '18.0.1.0.0',
+    'version': '18.0.1.1.0',
     'summary': 'Rooms, bookings, billing and reports for small hotels',
     'category': 'Services',
     'author': 'Olajide',
@@ -9,8 +9,10 @@
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',
+        'data/sequence.xml',
         'views/room_type_views.xml',
         'views/room_views.xml',
+        'views/booking_views.xml',
         'views/menu.xml',
     ],
     'application': True,
