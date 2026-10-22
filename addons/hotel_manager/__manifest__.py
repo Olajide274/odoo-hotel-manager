@@ -1,11 +1,11 @@
 {
     'name': 'Hotel Manager',
-    'version': '18.0.1.1.0',
+    'version': '18.0.1.2.0',
     'summary': 'Rooms, bookings, billing and reports for small hotels',
     'category': 'Services',
     'author': 'Olajide',
     'license': 'LGPL-3',
-    'depends': ['base'],
+    'depends': ['base', 'account'],
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',
@@ -13,6 +13,7 @@
         'views/room_type_views.xml',
         'views/room_views.xml',
         'views/booking_views.xml',
+        'views/booking_billing_views.xml',
         'views/menu.xml',
     ],
     'application': True,

@@ -5,3 +5,5 @@ access_hotel_room_receptionist,hotel.room receptionist,model_hotel_room,hotel_ma
 access_hotel_room_manager,hotel.room manager,model_hotel_room,hotel_manager.group_hotel_manager,1,1,1,1
 access_hotel_booking_receptionist,hotel.booking receptionist,model_hotel_booking,hotel_manager.group_hotel_receptionist,1,1,1,0
 access_hotel_booking_manager,hotel.booking manager,model_hotel_booking,hotel_manager.group_hotel_manager,1,1,1,1
+access_hotel_booking_charge_receptionist,hotel.booking.charge receptionist,model_hotel_booking_charge,hotel_manager.group_hotel_receptionist,1,1,1,1
+access_hotel_booking_charge_manager,hotel.booking.charge manager,model_hotel_booking_charge,hotel_manager.group_hotel_manager,1,1,1,1

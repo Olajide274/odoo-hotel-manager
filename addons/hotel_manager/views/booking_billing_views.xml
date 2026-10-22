@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hotel_booking_view_form_billing" model="ir.ui.view">
+        <field name="name">hotel.booking.form.billing</field>
+        <field name="model">hotel.booking</field>
+        <field name="inherit_id" ref="hotel_booking_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_cancel']" position="before">
+                <button name="action_create_invoice" string="Create Invoice" type="object"
+                        class="btn-primary"
+                        invisible="state not in ('checked_in', 'checked_out') or has_live_invoice"/>
+                <button name="action_view_invoice" string="View Invoice" type="object"
+                        invisible="not invoice_id"/>
+            </xpath>
+            <xpath expr="//sheet" position="inside">
+                <group string="Billing">
+                    <field name="has_live_invoice" invisible="1"/>
+                    <field name="partner_id" readonly="has_live_invoice"/>
+                    <field name="invoice_id"/>
+                    <field name="payment_state" widget="badge"
+                           invisible="not invoice_id"
+                           decoration-success="payment_state in ('paid', 'in_payment')"
+                           decoration-warning="payment_state == 'partial'"
+                           decoration-danger="payment_state == 'not_paid'"/>
+                </group>
+                <notebook>
+                    <page string="Folio (Extra Charges)" name="folio">
+                        <field name="charge_ids"
+                               readonly="state not in ('checked_in', 'checked_out') or has_live_invoice">
+                            <list editable="bottom">
+                                <field name="date"/>
+                                <field name="category"/>
+                                <field name="description"/>
+                                <field name="quantity"/>
+                                <field name="currency_id" column_invisible="True"/>
+                                <field name="unit_price"/>
+                                <field name="subtotal"/>
+                            </list>
+                        </field>
+                        <group class="oe_subtotal_footer">
+                            <field name="total_price" string="Room Charges"/>
+                            <field name="charges_total"/>
+                            <field name="folio_total" class="oe_subtotal_footer_separator"/>
+                        </group>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hotel_booking_view_list_billing" model="ir.ui.view">
+        <field name="name">hotel.booking.list.billing</field>
+        <field name="model">hotel.booking</field>
+        <field name="inherit_id" ref="hotel_booking_view_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="after">
+                <field name="payment_state" widget="badge" optional="show"
+                       decoration-success="payment_state in ('paid', 'in_payment')"
+                       decoration-warning="payment_state == 'partial'"
+                       decoration-danger="payment_state == 'not_paid'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

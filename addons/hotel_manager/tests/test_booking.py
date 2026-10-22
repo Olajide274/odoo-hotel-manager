@@ -40,6 +40,7 @@ class TestHotelBooking(TransactionCase):
 
     def test_price_is_snapshot_of_room_price(self):
         booking = self._book('2026-11-01', '2026-11-04')
+        self.env.flush_all()
         self.room.price_per_night = 40000
         self.assertEqual(booking.price_per_night, 25000)
         self.assertEqual(booking.total_price, 75000)
