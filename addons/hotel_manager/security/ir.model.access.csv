@@ -11,3 +11,4 @@ access_hotel_plan_receptionist,hotel.plan receptionist,model_hotel_plan,hotel_ma
 access_hotel_plan_admin,hotel.plan admin,model_hotel_plan,base.group_system,1,1,1,1
 access_hotel_subscription_payment_manager,hotel.subscription.payment manager,model_hotel_subscription_payment,hotel_manager.group_hotel_manager,1,0,0,0
 access_hotel_subscription_payment_admin,hotel.subscription.payment admin,model_hotel_subscription_payment,base.group_system,1,1,1,1
+access_hotel_signup_token_admin,hotel.signup.token admin,model_hotel_signup_token,base.group_system,1,1,1,1

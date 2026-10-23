@@ -13,3 +13,4 @@ from . import subscription_payment
 from . import menu_restrict
 from . import dashboard
 from . import footer_patch
+from . import signup_token

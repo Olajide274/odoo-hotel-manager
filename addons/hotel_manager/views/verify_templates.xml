@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="verify_message_page" name="Hotel Manager Verify Message">
+        <t t-call="website.layout">
+            <div id="wrap" class="hm-wrap">
+                <link rel="stylesheet" href="/hotel_manager/static/src/css/hotel_site.css"/>
+                <div class="hm-signup-box">
+                    <div class="hm-panel hm-closed">
+                        <h2 t-out="title"/>
+                        <p t-out="text"/>
+                        <a t-if="link_url" t-att-href="link_url" class="hm-btn hm-btn-primary" t-out="link_label"/>
+                        <p t-if="show_resend" class="hm-sub" style="margin-top:18px">
+                            Did not get it? <a t-att-href="resend_url">Send a new link</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="verify_confirm_page" name="Hotel Manager Verify Confirm">
+        <t t-call="website.layout">
+            <div id="wrap" class="hm-wrap">
+                <link rel="stylesheet" href="/hotel_manager/static/src/css/hotel_site.css"/>
+                <div class="hm-signup-box">
+                    <div class="hm-panel hm-closed">
+                        <h2>One more click</h2>
+                        <p>Confirm your email to start your free trial.</p>
+                        <form t-attf-action="/hotel/verify/#{token}/confirm" method="post">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <button type="submit" class="hm-btn hm-btn-primary">Confirm my email</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="verify_resend_page" name="Hotel Manager Verify Resend">
+        <t t-call="website.layout">
+            <div id="wrap" class="hm-wrap">
+                <link rel="stylesheet" href="/hotel_manager/static/src/css/hotel_site.css"/>
+                <div class="hm-signup-box">
+                    <div class="hm-panel">
+                        <div t-if="done" class="hm-closed">
+                            <h2>Check your inbox</h2>
+                            <p>If that email is waiting for confirmation, we have sent a new link.</p>
+                            <a href="/web/login" class="hm-btn hm-btn-ghost">Back to login</a>
+                        </div>
+                        <form t-else="" action="/hotel/verify/resend/submit" method="post">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <h2>Send a new confirmation link</h2>
+                            <p class="hm-hint">Enter the email you signed up with.</p>
+                            <div class="hm-field">
+                                <label for="resend_email">Email</label>
+                                <input id="resend_email" name="email" type="email" required="required" t-att-value="email"/>
+                            </div>
+                            <button type="submit" class="hm-btn hm-btn-primary">Send link</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

@@ -29,6 +29,7 @@
         'report/booking_receipt_templates.xml',
         'views/hotel_plan_views.xml',
         'views/pricing_signup_templates.xml',
+        'views/verify_templates.xml',
         'views/menu.xml',
         'views/login_views.xml',
         'views/dashboard_views.xml',

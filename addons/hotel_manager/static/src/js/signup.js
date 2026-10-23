@@ -58,5 +58,5 @@
         if (btn) { btn.disabled = true; btn.textContent = 'Creating your hotel...'; }
     });
 
-    show(0);
+    show(document.querySelector('.hm-error') ? 1 : 0);
 }());
