@@ -7,6 +7,7 @@
     'license': 'LGPL-3',
     'depends': ['base', 'account', 'website'],
     'data': [
+        'data/site_branding.xml',
         'security/security.xml',
         'security/ir.model.access.csv',
         'security/hotel_rules.xml',

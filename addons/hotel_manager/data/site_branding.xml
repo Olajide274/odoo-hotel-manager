@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="asset_swift_brand" model="ir.asset">
+        <field name="name">Swift brand styles</field>
+        <field name="bundle">web.assets_frontend</field>
+        <field name="path">hotel_manager/static/src/css/swift_brand.css</field>
+    </record>
+    <template id="login_new_hotel" inherit_id="web.login" name="Login: new hotel link">
+        <xpath expr="//form" position="after">
+            <div class="sw-login-foot text-center mt-3 text-muted">New hotel? <a href="/hotel/signup">Start your 7-day free trial</a></div>
+        </xpath>
+    </template>
+</odoo>
