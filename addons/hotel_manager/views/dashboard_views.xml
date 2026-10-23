@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hotel_dashboard_action" model="ir.actions.client">
+        <field name="name">Dashboard</field>
+        <field name="tag">hotel_dashboard</field>
+    </record>
+    <menuitem id="menu_hotel_dashboard" name="Dashboard" parent="menu_hotel_root"
+              action="hotel_dashboard_action" sequence="1"/>
+</odoo>

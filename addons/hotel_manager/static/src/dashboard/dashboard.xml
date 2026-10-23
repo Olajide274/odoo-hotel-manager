@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hotel_manager.Dashboard">
+        <div class="hd-wrap">
+            <t t-if="state.loading"><div class="hd-loading">Loading your dashboard...</div></t>
+            <t t-else="">
+                <div class="hd-head">
+                    <div>
+                        <h1 t-out="state.d.hotel"/>
+                        <p class="hd-sub">Today, <t t-out="state.d.today"/></p>
+                    </div>
+                    <div class="hd-actions">
+                        <button class="hd-btn hd-primary" t-on-click="newBooking">+ New booking</button>
+                        <button class="hd-btn" t-on-click="openBookings">Bookings</button>
+                        <button class="hd-btn" t-on-click="openRooms">Rooms</button>
+                    </div>
+                </div>
+
+                <div class="hd-grid">
+                    <div class="hd-card hd-k1"><span>Arrivals today</span><b t-out="state.d.arrivals"/></div>
+                    <div class="hd-card hd-k2"><span>Departures today</span><b t-out="state.d.departures"/></div>
+                    <div class="hd-card hd-k3"><span>Guests in-house</span><b t-out="state.d.in_house"/></div>
+                    <div class="hd-card hd-k4"><span>Occupancy</span><b><t t-out="state.d.occupancy"/>%</b></div>
+                </div>
+
+                <div class="hd-row">
+                    <div class="hd-card hd-wide">
+                        <h3>Rooms (<t t-out="state.d.rooms_total"/>)</h3>
+                        <div class="hd-status">
+                            <div class="hd-pill s-available"><b t-out="state.d.status.available"/>Available</div>
+                            <div class="hd-pill s-occupied"><b t-out="state.d.status.occupied"/>Occupied</div>
+                            <div class="hd-pill s-cleaning"><b t-out="state.d.status.cleaning"/>Cleaning</div>
+                            <div class="hd-pill s-maintenance"><b t-out="state.d.status.maintenance"/>Maintenance</div>
+                        </div>
+                        <h3 class="hd-mt">Completed stays this month</h3>
+                        <div class="hd-big"><t t-out="money(state.d.month_value)"/></div>
+                        <p class="hd-sub"><t t-out="state.d.month_stays"/> checked-out stays</p>
+                        <div class="hd-status hd-mt">
+                            <div class="hd-pill s-available"><b t-out="money(state.d.collected)"/>Collected</div>
+                            <div class="hd-pill s-cleaning"><b t-out="money(state.d.outstanding)"/>Outstanding (<t t-out="state.d.outstanding_count"/>)</div>
+                        </div>
+                    </div>
+
+                    <div class="hd-card hd-wide">
+                        <h3>Arrivals, last 7 days</h3>
+                        <t t-if="state.d.full_reports">
+                            <div class="hd-chart">
+                                <div t-foreach="state.d.trend" t-as="t" t-key="t_index" class="hd-col">
+                                    <i t-att-style="'height:' + barHeight(t.count) + '%'"/>
+                                    <small><t t-out="t.count"/></small>
+                                    <em t-out="t.label"/>
+                                </div>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <div class="hd-locked">
+                                <b>Trends are on Standard and Premium</b>
+                                <p>Upgrade your plan to see weekly booking trends.</p>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+
+                <div class="hd-card">
+                    <h3>Upcoming arrivals</h3>
+                    <t t-if="state.d.upcoming.length">
+                        <table class="hd-table">
+                            <tr t-foreach="state.d.upcoming" t-as="u" t-key="u_index">
+                                <td><b t-out="u.guest"/></td>
+                                <td>Room <t t-out="u.room"/></td>
+                                <td t-out="u.check_in"/>
+                                <td><t t-out="u.nights"/> night(s)</td>
+                                <td class="hd-ref" t-out="u.name"/>
+                            </tr>
+                        </table>
+                    </t>
+                    <p t-else="" class="hd-sub">No upcoming arrivals yet. Create your first booking to get started.</p>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>

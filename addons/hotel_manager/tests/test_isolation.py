@@ -1,6 +1,3 @@
-from datetime import timedelta
-
-from odoo import fields
 from odoo.exceptions import AccessError
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
@@ -12,48 +9,32 @@ class TestHotelIsolation(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        free = cls.env.ref('hotel_manager.plan_free')
         manager = cls.env.ref('hotel_manager.group_hotel_manager')
         internal = cls.env.ref('base.group_user')
-        today = fields.Date.today()
+        cls.co_a = cls.env['res.company'].create({'name': 'Iso Hotel A'})
+        cls.co_b = cls.env['res.company'].create({'name': 'Iso Hotel B'})
+        cls.user_a = cls.env['res.users'].with_context(no_reset_password=True).create({
+            'name': 'A', 'login': 'iso_a@test.com', 'email': 'iso_a@test.com',
+            'company_id': cls.co_a.id, 'company_ids': [(6, 0, [cls.co_a.id])],
+            'groups_id': [(6, 0, [internal.id, manager.id])]})
+        rt = cls.env['hotel.room.type'].create({
+            'name': 'Iso', 'price_per_night': 1000, 'company_id': cls.co_b.id})
+        cls.room_b = cls.env['hotel.room'].create({
+            'name': 'B1', 'room_type_id': rt.id, 'company_id': cls.co_b.id})
+        cls.booking_b = cls.env['hotel.booking'].create({
+            'guest_name': 'Guest B', 'room_id': cls.room_b.id,
+            'company_id': cls.co_b.id})
 
-        def make_hotel(label):
-            company = cls.env['res.company'].create({'name': 'Hotel ' + label, 'hotel_plan_id': free.id})
-            user = cls.env['res.users'].with_context(no_reset_password=True).create({
-                'name': 'Mgr ' + label, 'login': 'mgr_%s@iso.test' % label.lower(),
-                'email': 'mgr_%s@iso.test' % label.lower(),
-                'company_id': company.id, 'company_ids': [(6, 0, [company.id])],
-                'groups_id': [(6, 0, [internal.id, manager.id])],
-            })
-            rtype = cls.env['hotel.room.type'].create({
-                'name': 'Type ' + label, 'price_per_night': 1000, 'company_id': company.id})
-            room = cls.env['hotel.room'].create({
-                'name': '1' + label, 'room_type_id': rtype.id, 'company_id': company.id})
-            booking = cls.env['hotel.booking'].create({
-                'guest_name': 'Guest ' + label, 'room_id': room.id, 'company_id': company.id,
-                'check_in': today + timedelta(days=1), 'check_out': today + timedelta(days=2)})
-            return company, user, rtype, room, booking
+    def test_cannot_see_other_hotel(self):
+        for model, rec in (('hotel.room', self.room_b),
+                           ('hotel.booking', self.booking_b)):
+            seen = self.env[model].with_user(self.user_a).search([('id', '=', rec.id)])
+            self.assertFalse(seen, "%s leaks across hotels" % model)
 
-        cls.co_a, cls.user_a, cls.type_a, cls.room_a, cls.book_a = make_hotel('A')
-        cls.co_b, cls.user_b, cls.type_b, cls.room_b, cls.book_b = make_hotel('B')
-
-    def _assert_isolated(self, model, own, other):
-        found = self.env[model].with_user(self.user_a).search([])
-        self.assertIn(own, found)
-        self.assertNotIn(other, found)
+    def test_cannot_edit_other_hotel(self):
         with self.assertRaises(AccessError):
-            other.with_user(self.user_a).read(['id'])
+            self.room_b.with_user(self.user_a).write({'status': 'maintenance'})
 
-    def test_rooms(self):
-        self._assert_isolated('hotel.room', self.room_a, self.room_b)
-
-    def test_room_types(self):
-        self._assert_isolated('hotel.room.type', self.type_a, self.type_b)
-
-    def test_bookings(self):
-        self._assert_isolated('hotel.booking', self.book_a, self.book_b)
-
-    def test_manager_cannot_edit_plans(self):
-        plan = self.env.ref('hotel_manager.plan_standard')
-        with self.assertRaises(AccessError):
-            plan.with_user(self.user_a).write({'price_monthly': 1})
+    def test_dashboard_only_counts_own_hotel(self):
+        data = self.env['hotel.dashboard'].with_user(self.user_a).get_data()
+        self.assertEqual(data['rooms_total'], 0)

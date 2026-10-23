@@ -141,15 +141,23 @@ class HotelSignup(http.Controller):
     # ---------- routes ----------
     @http.route('/hotel/pricing', type='http', auth='public', website=True, sitemap=True)
     def pricing(self, **kw):
-        return request.render('hotel_manager.pricing_page', {'cards': self._cards()})
+        user = request.env.user
+        logged_in = not user._is_public()
+        current = user.sudo().company_id.hotel_plan_id.code if logged_in else None
+        return request.render('hotel_manager.pricing_page', {
+            'cards': self._cards(), 'logged_in': logged_in, 'current_code': current})
 
     @http.route('/hotel/signup', type='http', auth='public', website=True)
     def signup(self, plan=None, **kw):
+        if not request.env.user._is_public():
+            return request.redirect('/odoo')
         return request.render('hotel_manager.signup_page', self._signup_ctx(selected=plan))
 
     @http.route('/hotel/signup/submit', type='http', auth='public', website=True,
                 methods=['POST'], csrf=True)
     def signup_submit(self, **post):
+        if not request.env.user._is_public():
+            return request.redirect('/odoo')
         if post.get('website_url'):  # honeypot field, humans leave it empty
             return request.redirect('/hotel/pricing')
         if _rate_limited(request.httprequest.remote_addr):

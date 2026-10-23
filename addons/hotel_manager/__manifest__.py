@@ -14,6 +14,7 @@
         'security/hotel_rules.xml',
         'data/sequence.xml',
         'data/hotel_plan_data.xml',
+        'data/menu_restrict.xml',
         'views/room_type_views.xml',
         'views/room_views.xml',
         'views/room_kanban_views.xml',
@@ -28,12 +29,20 @@
         'views/hotel_plan_views.xml',
         'views/pricing_signup_templates.xml',
         'views/menu.xml',
+        'views/dashboard_views.xml',
         'data/subscription.xml',
         'views/upgrade_templates.xml',
     ],
     'demo': [
         'data/demo_data.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'hotel_manager/static/src/dashboard/dashboard.js',
+            'hotel_manager/static/src/dashboard/dashboard.xml',
+            'hotel_manager/static/src/dashboard/dashboard.scss',
+        ],
+    },
     'application': True,
     'installable': True,
 }

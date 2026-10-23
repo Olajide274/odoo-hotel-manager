@@ -24,7 +24,10 @@
                                 <li t-foreach="c['features']" t-as="f"
                                     t-attf-class="#{'' if f['on'] else 'is-off'}" t-out="f['text']"/>
                             </ul>
-                            <a t-attf-href="/hotel/signup?plan=#{c['code']}"
+                            <t t-if="logged_in">
+                                <span t-if="c['code'] == current_code" class="hm-btn hm-btn-ghost">Your current plan</span>
+                            </t>
+                            <a t-else="" t-attf-href="/hotel/signup?plan=#{c['code']}"
                                t-attf-class="hm-btn #{'hm-btn-primary' if c['recommended'] else 'hm-btn-ghost'}"
                                t-out="c['cta']"/>
                         </div>
