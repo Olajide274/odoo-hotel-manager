@@ -17,7 +17,13 @@
         <field name="code">action = env.company.sudo().hotel_subscription_notification()</field>
     </record>
 
+    <record id="action_my_plan_url" model="ir.actions.act_url">
+        <field name="name">My Plan</field>
+        <field name="url">/hotel/my-plan</field>
+        <field name="target">self</field>
+    </record>
+
     <menuitem id="menu_hotel_subscription" name="My Plan" parent="menu_hotel_root"
-              action="action_hotel_subscription" sequence="80"
+              action="action_my_plan_url" sequence="80"
               groups="group_hotel_receptionist"/>
 </odoo>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="asset_plan_badge_js" model="ir.asset">
+        <field name="name">Hotel plan badge JS</field>
+        <field name="bundle">web.assets_backend</field>
+        <field name="path">hotel_manager/static/src/js/plan_badge.js</field>
+    </record>
+    <record id="asset_plan_badge_xml" model="ir.asset">
+        <field name="name">Hotel plan badge template</field>
+        <field name="bundle">web.assets_backend</field>
+        <field name="path">hotel_manager/static/src/xml/plan_badge.xml</field>
+    </record>
+
+    <template id="my_plan_page" name="Hotel: my plan">
+        <t t-call="website.layout">
+            <div id="wrap" class="container py-5" style="max-width:760px">
+                <a href="/odoo" class="text-muted text-decoration-none">← Back to Hotel</a>
+                <div class="sw-plan-card mt-3 p-4 p-md-5">
+                    <t t-if="info">
+                        <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                            <div>
+                                <div class="text-muted small text-uppercase">Your plan</div>
+                                <h1 class="h2 mb-0" t-out="info['plan'].name"/>
+                                <div class="text-muted" t-out="company.name"/>
+                            </div>
+                            <span t-attf-class="badge rounded-pill fs-6 text-bg-#{info['css']}" t-out="info['label']"/>
+                        </div>
+                        <div t-if="info['state'] == 'trial'" class="mt-4">
+                            <div class="text-muted small">Time left in your free trial</div>
+                            <div id="sw-countdown" class="display-6 fw-bold" t-att-data-end="info['end_iso']">...</div>
+                            <div class="progress mt-2" style="height:8px">
+                                <div class="progress-bar" t-attf-style="width: #{info['pct']}%"></div>
+                            </div>
+                            <div class="small text-muted mt-1">Ends on <t t-out="info['end']"/></div>
+                        </div>
+                        <div t-if="info['state'] == 'expired'" class="alert alert-danger mt-4">
+                            Your free trial ended on <b t-out="info['end']"/>. New bookings are blocked until you upgrade.
+                        </div>
+                        <div t-if="info['paid']" class="mt-3 text-muted">Paid until <b t-out="info['paid']"/></div>
+                        <div class="row mt-4 g-3">
+                            <div class="col-sm-6"><div class="small text-muted">Rooms</div><div class="fw-semibold" t-out="limits['rooms']"/></div>
+                            <div class="col-sm-6"><div class="small text-muted">Users</div><div class="fw-semibold" t-out="limits['users']"/></div>
+                        </div>
+                        <ul class="list-unstyled mt-3 mb-0">
+                            <li t-foreach="info['features']" t-as="f" class="mb-1">
+                                <span t-attf-class="fa #{'fa-check text-success' if f[1] else 'fa-times text-muted'} me-2"></span>
+                                <span t-out="f[0]"/>
+                            </li>
+                        </ul>
+                        <a href="/hotel/upgrade" class="btn btn-primary btn-lg mt-4">
+                            <t t-if="info['state'] == 'active'">Change plan</t><t t-else="">Choose a plan</t>
+                        </a>
+                    </t>
+                    <t t-else="">
+                        <h1 class="h3">No plan on this account</h1>
+                    </t>
+                </div>
+            </div>
+            <script t-if="info and info['state'] == 'trial'">
+(function () {
+    var el = document.getElementById('sw-countdown');
+    if (!el) { return; }
+    var end = new Date(el.getAttribute('data-end')).getTime();
+    function tick() {
+        var d = end - Date.now();
+        if (d > 0) {
+            var D = Math.floor(d / 86400000), H = Math.floor(d % 86400000 / 3600000),
+                M = Math.floor(d % 3600000 / 60000), S = Math.floor(d % 60000 / 1000);
+            el.textContent = D + 'd ' + H + 'h ' + M + 'm ' + S + 's';
+        } else { el.textContent = 'Trial ended'; }
+    }
+    tick(); setInterval(tick, 1000);
+}());
+            </script>
+        </t>
+    </template>
+</odoo>

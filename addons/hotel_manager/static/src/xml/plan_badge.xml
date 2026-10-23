@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hotel_manager.PlanBadge">
+        <a t-if="state.label" class="px-2 d-flex align-items-center text-decoration-none" t-att-href="state.url">
+            <span t-attf-class="badge rounded-pill text-bg-#{state.css}" t-esc="state.label"/>
+        </a>
+    </t>
+</templates>

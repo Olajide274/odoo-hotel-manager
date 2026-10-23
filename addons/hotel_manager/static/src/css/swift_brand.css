@@ -16,3 +16,7 @@ footer#bottom{background-color:#0b1020 !important;color:#cbd5e1}
 .sw-footer a:hover{color:#fff}
 .sw-footer .sw-social a{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.08);margin-right:8px;color:#fff}
 .sw-footer .sw-social a:hover{background:#4f46e5}
+
+.sw-plan-card{background:#fff;border:1px solid #e8ebf3;border-radius:18px;box-shadow:0 20px 50px rgba(15,23,42,.08)}
+.sw-plan-card .btn-primary{background:#4f46e5;border-color:#4f46e5;border-radius:10px;font-weight:600}
+.sw-plan-card .progress-bar{background:#4f46e5}
