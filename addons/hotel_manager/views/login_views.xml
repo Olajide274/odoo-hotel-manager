@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="login_dedicated" inherit_id="web.login" name="Hotel Manager: dedicated login">
+        <!-- 1. Remove the "Choose a user" list of remembered accounts -->
+        <xpath expr="//owl-component[@name='web.user_switch']" position="replace"/>
+
+        <!-- 2. Always show the form (the original hides it when no login is pre-filled) -->
+        <xpath expr="//form" position="attributes">
+            <attribute name="t-attf-class">oe_login_form</attribute>
+        </xpath>
+
+        <!-- 3. Heading and styling -->
+        <xpath expr="//form" position="before">
+            <style>
+                .hm-login-head{text-align:center;margin-bottom:22px;animation:hm-login-up .5s ease-out backwards}
+                .hm-login-head h2{font-weight:800;letter-spacing:-.02em;margin:0 0 4px;font-size:1.6rem;color:#0f172a}
+                .hm-login-head p{color:#64748b;margin:0}
+                .oe_login_form .form-label{font-weight:600;font-size:.9rem}
+                .oe_login_form .form-control{padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:12px;transition:border-color .2s,box-shadow .2s}
+                .oe_login_form .form-control:focus{border-color:#4f46e5;box-shadow:0 0 0 4px #e0e7ff}
+                .oe_login_form .btn-primary{padding:12px;border:0;border-radius:12px;font-weight:700;background:linear-gradient(90deg,#4f46e5,#7c3aed);box-shadow:0 8px 20px rgba(79,70,229,.3);transition:transform .15s,box-shadow .2s}
+                .oe_login_form .btn-primary:hover{box-shadow:0 12px 28px rgba(79,70,229,.42)}
+                .oe_login_form .btn-primary:active{transform:scale(.97)}
+                @keyframes hm-login-up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+                @media (prefers-reduced-motion:reduce){.hm-login-head{animation:none}}
+            </style>
+            <div class="hm-login-head">
+                <h2>Welcome back</h2>
+                <p>Log in to manage your hotel.</p>
+            </div>
+        </xpath>
+    </template>
+</odoo>

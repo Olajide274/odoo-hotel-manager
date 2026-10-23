@@ -12,3 +12,4 @@ from . import booking_expiry
 from . import subscription_payment
 from . import menu_restrict
 from . import dashboard
+from . import footer_patch
