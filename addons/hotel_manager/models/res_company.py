@@ -35,7 +35,7 @@ class ResCompany(models.Model):
         for company in self:
             plan = company.hotel_plan_id
             if plan.code == 'free' and not company.trial_end_date:
-                company.trial_end_date = today + timedelta(days=plan.trial_days or 7)
+                company.trial_end_date = today + timedelta(days=plan.trial_days or 3)
 
     @api.model_create_multi
     def create(self, vals_list):

@@ -6,3 +6,4 @@ from . import test_isolation
 from . import test_expiry
 from . import test_paystack
 from . import test_verification
+from . import test_license_company

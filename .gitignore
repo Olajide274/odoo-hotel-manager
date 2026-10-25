@@ -220,3 +220,5 @@ __marimo__/
 .streamlit/secrets.toml
 
 config/odoo.conf
+test.log
+*.dump

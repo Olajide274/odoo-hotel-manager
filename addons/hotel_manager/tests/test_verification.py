@@ -55,8 +55,10 @@ class TestSignupVerification(TransactionCase):
 
     def test_new_token_revokes_old_one(self):
         raw, _ = self.Token.issue(self.user)
-        self.Token.search([('user_id', '=', self.user.id)]).write(
-            {'create_date': fields.Datetime.now() - timedelta(minutes=5)})
+        self.env.cr.execute(
+            "UPDATE hotel_signup_token SET create_date = create_date - interval '5 minutes' "
+            "WHERE user_id = %s", (self.user.id,))
+        self.Token.invalidate_model()
         raw2, _ = self.Token.issue(self.user)
         self.assertIsNone(self.Token.consume(raw))
         self.assertTrue(self.Token.consume(raw2))

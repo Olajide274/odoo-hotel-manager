@@ -14,3 +14,7 @@ from . import menu_restrict
 from . import dashboard
 from . import footer_patch
 from . import signup_token
+from . import license
+from . import license_hooks
+from . import license_company
+from . import plan_activation

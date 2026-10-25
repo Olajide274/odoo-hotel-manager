@@ -35,6 +35,9 @@
         'views/dashboard_views.xml',
         'data/subscription.xml',
         'views/upgrade_templates.xml',
+        'views/license_views.xml',
+        'views/activation_views.xml',
+        'data/license_setup.xml',
     ],
     'demo': [
         'data/demo_data.xml',

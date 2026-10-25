@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hotel_plan_activate_view_form" model="ir.ui.view">
+        <field name="name">hotel.plan.activate.form</field>
+        <field name="model">hotel.plan.activate</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="company_id"/>
+                    <field name="plan_id"/>
+                    <field name="days"/>
+                    <field name="note" placeholder="e.g. paid by bank transfer, ref 1234"/>
+                </group>
+                <footer>
+                    <button name="action_activate" string="Activate" type="object" class="btn-primary"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="hotel_plan_activate_action" model="ir.actions.act_window">
+        <field name="name">Activate plan manually</field>
+        <field name="res_model">hotel.plan.activate</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="hotel_plan_activation_view_list" model="ir.ui.view">
+        <field name="name">hotel.plan.activation.list</field>
+        <field name="model">hotel.plan.activation</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0" delete="0">
+                <field name="activated_on"/>
+                <field name="company_id"/>
+                <field name="plan_id"/>
+                <field name="days"/>
+                <field name="paid_until"/>
+                <field name="note"/>
+                <field name="activated_by"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hotel_plan_activation_action" model="ir.actions.act_window">
+        <field name="name">Activation log</field>
+        <field name="res_model">hotel.plan.activation</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <menuitem id="menu_hotel_activations" name="Activation log" parent="menu_hotel_config"
+              action="hotel_plan_activation_action" sequence="30" groups="base.group_system"/>
+
+    <record id="res_company_form_hotel_licence" model="ir.ui.view">
+        <field name="name">res.company.form.hotel.licence</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Licence" name="hotel_licence" groups="base.group_system">
+                    <group>
+                        <field name="hotel_license_package"/>
+                        <field name="hotel_license_status"/>
+                        <field name="hotel_license_expires"/>
+                    </group>
+                    <button name="%(hotel_plan_activate_action)d" type="action"
+                            string="Activate plan manually" class="btn-primary"
+                            context="{'default_company_id': id}"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

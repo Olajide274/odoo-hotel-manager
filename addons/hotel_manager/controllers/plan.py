@@ -20,7 +20,7 @@ class HotelPlanPage(http.Controller):
             css = 'warning' if days <= 3 else 'info'
         else:
             label, css = '%s plan' % plan.name, 'success'
-        total = plan.trial_days or 7
+        total = plan.trial_days or 3
         return {
             'plan': plan, 'state': state, 'label': label, 'css': css,
             'days': days, 'end': end,

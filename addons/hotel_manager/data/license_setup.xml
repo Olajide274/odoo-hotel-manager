@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hotel_license_company_rule" model="ir.rule">
+        <field name="name">Hotel licence: own hotel only</field>
+        <field name="model_id" ref="model_hotel_license"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="groups" eval="[(4, ref('group_hotel_manager'))]"/>
+    </record>
+    <function model="res.company" name="_hotel_sync_all_licenses"/>
+</odoo>

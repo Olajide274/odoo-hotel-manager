@@ -7,7 +7,7 @@
     </record>
     <template id="login_new_hotel" inherit_id="web.login" name="Login: new hotel link">
         <xpath expr="//form" position="after">
-            <div class="sw-login-foot text-center mt-3 text-muted">New hotel? <a href="/hotel/signup">Start your 7-day free trial</a></div>
+            <div class="sw-login-foot text-center mt-3 text-muted">New hotel? <a href="/hotel/signup">Start your 3-day free trial</a></div>
         </xpath>
     </template>
 </odoo>

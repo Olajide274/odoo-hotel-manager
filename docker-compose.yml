@@ -25,6 +25,7 @@ services:
       HOST: localhost
       USER: odoo
       PASSWORD: odoo
+      HOTEL_LICENSE_SECRET: ${HOTEL_LICENSE_SECRET:-}
     volumes:
       - ./addons:/mnt/extra-addons
       - ./config/odoo.conf:/etc/odoo/odoo.conf:ro
