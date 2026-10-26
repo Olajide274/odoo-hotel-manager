@@ -76,3 +76,14 @@ class TestCompanyLicense(TransactionCase):
         self.assertTrue(self.License.has_feature('billing', company))
         self.assertEqual(
             self.env['hotel.plan.activation'].search_count([('company_id', '=', company.id)]), 1)
+
+    def test_admin_user_can_open_activation_wizard(self):
+        admin = self.env['res.users'].with_context(no_reset_password=True).create({
+            'name': 'Act Admin', 'login': 'act_admin@test.com', 'email': 'act_admin@test.com',
+            'groups_id': [(6, 0, [self.env.ref('base.group_user').id,
+                                  self.env.ref('base.group_system').id])]})
+        company = self._hotel('Wizard Hotel', self.free)
+        wiz = self.env['hotel.plan.activate'].with_user(admin).create({
+            'company_id': company.id, 'plan_id': self.standard.id, 'days': 30})
+        wiz.action_activate()
+        self.assertEqual(company.hotel_plan_id, self.standard)
