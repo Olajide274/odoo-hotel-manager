@@ -70,6 +70,12 @@ class ResCompany(models.Model):
             if view and view.arch_db != arch:
                 view.write({'arch_db': arch})
 
+        for view in View.search([('arch_db', 'ilike', '555-555-5556')]):
+            arch = (view.arch_db.replace('+1 555-555-5556', PHONE)
+                    .replace('+15555555556', '+2348165212254'))
+            if arch != view.arch_db:
+                view.write({'arch_db': arch})
+
         # logo: first file that exists
         for fname in ('swift_logo.svg', 'swift_logo_dark.svg', 'logo.svg', 'logo.png'):
             path = get_module_resource('hotel_manager', 'static/src/img', fname)
