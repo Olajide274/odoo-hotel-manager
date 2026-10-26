@@ -63,7 +63,7 @@
     </record>
 
     <menuitem id="menu_hotel_license" name="Hotel License" parent="menu_hotel_root" sequence="95"
-              action="hotel_license_open_action" groups="group_hotel_manager"/>
+              action="hotel_license_open_action" groups="base.group_system"/>
 
     <record id="hotel_booking_view_form_license" model="ir.ui.view">
         <field name="name">hotel.booking.form.license</field>

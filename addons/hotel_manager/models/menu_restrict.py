@@ -2,6 +2,7 @@ from odoo import api, models
 
 # Standard Odoo root menus that hotel users should not see
 _RESTRICTED = {
+    'website.menu_website_configuration': ['base.group_system'],  # Website
     'base.menu_management': ['base.group_system'],                      # Apps
     'spreadsheet_dashboard.spreadsheet_dashboard_menu_root': ['base.group_system'],  # Dashboards
     'mail.menu_root_discuss': ['base.group_system'],                    # Discuss
