@@ -18,3 +18,5 @@ from . import license
 from . import license_hooks
 from . import license_company
 from . import plan_activation
+from . import single_device
+from . import branding_setup

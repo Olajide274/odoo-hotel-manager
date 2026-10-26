@@ -16,6 +16,7 @@
         'data/hotel_plan_data.xml',
         'data/menu_restrict.xml',
         'data/footer_patch.xml',
+        'data/branding_setup.xml',
         'views/room_type_views.xml',
         'views/room_views.xml',
         'views/room_kanban_views.xml',
