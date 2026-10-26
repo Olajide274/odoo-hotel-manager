@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="activation_request_page" name="Hotel: request activation">
+        <t t-call="website.layout">
+            <div id="wrap" class="hm-wrap">
+                <link rel="stylesheet" href="/hotel_manager/static/src/css/hotel_site.css"/>
+                <div class="hm-signup-box">
+                    <div class="hm-panel">
+                        <div t-if="done" class="hm-closed">
+                            <h2 t-if="not again">Request sent</h2>
+                            <h2 t-else="">We already have your request</h2>
+                            <p>We will contact you shortly to activate the <b t-out="plan.name"/> plan for <b t-out="company.name"/>.</p>
+                            <a href="/odoo" class="hm-btn hm-btn-primary">Back to dashboard</a>
+                        </div>
+                        <t t-else="">
+                            <h2>Activate <t t-out="plan.name"/> with our help</h2>
+                            <p class="hm-hint">Pay by bank transfer or arrange setup with us. Leave your details and we will activate your plan.</p>
+                            <form t-attf-action="/hotel/activate-request/#{plan.code}/submit" method="post">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <div class="hm-field">
+                                    <label for="ar_phone">Phone number</label>
+                                    <input id="ar_phone" name="phone" type="tel" required="required" t-att-value="phone"/>
+                                </div>
+                                <div class="hm-field">
+                                    <label for="ar_note">Anything we should know? (optional)</label>
+                                    <input id="ar_note" name="note" maxlength="500"/>
+                                </div>
+                                <button type="submit" class="hm-btn hm-btn-primary">Send request</button>
+                            </form>
+                            <p class="hm-hint" style="margin-top:18px">Prefer to chat? <a t-att-href="wa_url" target="_blank" rel="noopener">Message us on WhatsApp</a></p>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <record id="hotel_plan_request_view_list" model="ir.ui.view">
+        <field name="name">hotel.plan.request.list</field>
+        <field name="model">hotel.plan.request</field>
+        <field name="arch" type="xml">
+            <list create="0" delete="0">
+                <field name="create_date"/>
+                <field name="company_id"/>
+                <field name="plan_id"/>
+                <field name="contact_name"/>
+                <field name="phone"/>
+                <field name="note"/>
+                <field name="state" widget="badge" decoration-warning="state == 'new'" decoration-success="state == 'done'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hotel_plan_request_action" model="ir.actions.act_window">
+        <field name="name">Activation requests</field>
+        <field name="res_model">hotel.plan.request</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <menuitem id="menu_hotel_requests" name="Activation requests" parent="menu_hotel_config"
+              action="hotel_plan_request_action" sequence="25" groups="base.group_system"/>
+
+    <record id="res_company_form_setup_fee" model="ir.ui.view">
+        <field name="name">res.company.form.setup.fee</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="res_company_form_hotel_licence"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='hotel_license_expires']" position="after">
+                <field name="hotel_charge_setup"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

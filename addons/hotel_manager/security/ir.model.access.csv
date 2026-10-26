@@ -16,3 +16,4 @@ access_hotel_license_manager,hotel.license manager,model_hotel_license,hotel_man
 access_hotel_license_admin,hotel.license admin,model_hotel_license,base.group_system,1,1,0,0
 access_hotel_plan_activation_admin,hotel.plan.activation admin,model_hotel_plan_activation,base.group_system,1,0,0,0
 access_hotel_plan_activate_admin,hotel.plan.activate admin,model_hotel_plan_activate,base.group_system,1,1,1,1
+access_hotel_plan_request_admin,hotel.plan.request admin,model_hotel_plan_request,base.group_system,1,1,1,1

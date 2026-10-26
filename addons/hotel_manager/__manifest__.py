@@ -38,6 +38,7 @@
         'views/upgrade_templates.xml',
         'views/license_views.xml',
         'views/activation_views.xml',
+        'views/activation_request_views.xml',
         'data/license_setup.xml',
     ],
     'demo': [

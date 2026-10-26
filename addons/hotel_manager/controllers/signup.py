@@ -52,7 +52,7 @@ class HotelSignup(http.Controller):
                 'price': _money(p.price_monthly),
                 'period': '' if is_free else '/month',
                 'setup': ('%d-day free trial' % (p.trial_days or 3)) if is_free
-                         else '+ %s one-time setup' % _money(p.price_onetime),
+                         else 'Optional setup and onboarding: %s' % _money(p.price_onetime),
                 'recommended': p.code == 'standard',
                 'cta': 'Start free trial' if is_free else 'Choose %s' % p.name,
                 'summary': '%s · %s' % (rooms, users),

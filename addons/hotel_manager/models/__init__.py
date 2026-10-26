@@ -20,3 +20,5 @@ from . import license_company
 from . import plan_activation
 from . import single_device
 from . import branding_setup
+from . import setup_fee
+from . import plan_request

@@ -39,7 +39,7 @@ class HotelSubscribe(http.Controller):
             [('code', '=', plan_code), ('code', '!=', 'free')], limit=1)
         ICP = request.env['ir.config_parameter'].sudo()
         secret = ICP.get_param('hotel_manager.paystack_secret_key') or ''
-        amount = (plan.price_monthly + (plan.price_onetime if self._first_payment(company) else 0.0)) if plan else 0
+        amount = (plan.price_monthly + (plan.price_onetime if company.hotel_charge_setup and self._first_payment(company) else 0.0)) if plan else 0
         if not plan or not secret or amount <= 0:
             return request.redirect('/hotel/upgrade?error=1')
         reference = 'SUB-%d-%s' % (company.id, uuid.uuid4().hex[:10])
