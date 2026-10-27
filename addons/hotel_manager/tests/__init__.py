@@ -9,3 +9,4 @@ from . import test_verification
 from . import test_license_company
 from . import test_single_device
 from . import test_plan_request
+from . import test_booking_slug

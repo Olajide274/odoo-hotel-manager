@@ -5,3 +5,4 @@ from . import subscribe
 from . import plan
 from . import verify
 from . import activation_request
+from . import booking_slug

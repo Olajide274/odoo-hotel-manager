@@ -57,6 +57,10 @@ class HotelDashboard(models.AbstractModel):
 
         return {
             'hotel': company.name,
+            'booking_url': ('%s/hotel/stay/%s' % (
+                (self.env['ir.config_parameter'].sudo().get_param('hotel_manager.public_url')
+                 or self.env['ir.config_parameter'].sudo().get_param('web.base.url') or '').rstrip('/'),
+                company.hotel_booking_slug)) if company.hotel_booking_slug else '',
             'symbol': company.currency_id.symbol or '',
             'today': fields.Date.to_string(today),
             'rooms_total': total,

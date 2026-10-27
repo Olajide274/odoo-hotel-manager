@@ -20,6 +20,15 @@ HEADER_CTA = """<data inherit_id="website.placeholder_header_call_to_action" nam
     </xpath>
 </data>"""
 
+BRAND = """<data inherit_id="web.brand_promotion" name="Brand Promotion">
+    <xpath expr="//t[@t-call='web.brand_promotion_message']" position="replace">
+        <t t-call="web.brand_promotion_message">
+            <t t-set="_message">Need a website that takes bookings? <a target="_blank" rel="noopener" href="https://wa.me/2348165212254?text=Hi%2C%20I%20need%20a%20website%20for%20my%20hotel">Talk to Swift Digital Services</a></t>
+            <t t-set="_utm_medium" t-valuef="website"/>
+        </t>
+    </xpath>
+</data>"""
+
 FOOTER = """<data inherit_id="website.layout" name="Default" active="True">
     <xpath expr="//div[@id='footer']" position="replace">
         <div id="footer" class="oe_structure oe_structure_solo" t-ignore="true" t-if="not no_footer"><section class="sw-footer s_text_block pt48 pb24" data-snippet="s_text_block" data-name="Text">
@@ -65,7 +74,8 @@ class ResCompany(models.Model):
         website.write({'name': NAME, 'homepage_url': '/hotel/pricing'})
 
         for key, arch in (('website.header_call_to_action', HEADER_CTA),
-                          ('website.footer_custom', FOOTER)):
+                          ('website.footer_custom', FOOTER),
+                          ('website.brand_promotion', BRAND)):
             view = View.search([('key', '=', key)], limit=1)
             if view and view.arch_db != arch:
                 view.write({'arch_db': arch})

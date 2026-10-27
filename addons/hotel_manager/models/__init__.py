@@ -22,3 +22,4 @@ from . import single_device
 from . import branding_setup
 from . import setup_fee
 from . import plan_request
+from . import booking_slug
