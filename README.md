@@ -1,6 +1,6 @@
 # Odoo Hotel Manager
 
-A custom Odoo 18 addon for running a small hotel: rooms, bookings, guest billing and online payments in one system. It is built for hotels that still run on paper registers or Excel sheets, where double-bookings, forgotten bar bills and unreconciled payments quietly cost money every week.
+A custom Odoo 18 addon for running hotels: rooms, bookings, guest billing and online payments in one system. It is built for hotels that still run on paper registers or Excel sheets, where double-bookings, forgotten bar bills and unreconciled payments quietly cost money every week.
 
 <!-- Add 3-4 screenshots here: booking form, folio tab, paid invoice, dashboard.
      Example: ![Booking form](docs/screenshots/booking-form.png) -->
