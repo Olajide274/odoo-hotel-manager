@@ -7,14 +7,16 @@
                 <p t-if="error" class="alert alert-danger" t-out="error"/>
                 <p>Current plan: <b t-out="company.hotel_plan_id.name or 'None'"/>
                     <t t-if="company.hotel_paid_until"> (paid until <span t-out="company.hotel_paid_until"/>)</t></p>
+                <p class="text-muted">Prefer bank transfer, or want help with setup? Choose <b>Contact us to activate</b> and we will activate your plan for you.</p>
                 <div class="row">
                     <div t-foreach="plans" t-as="p" class="col-md-4 mb-3">
                         <div class="card h-100"><div class="card-body">
                             <h4 t-out="p.name"/>
                             <p t-out="p.description"/>
                             <p><b>₦<span t-out="'{:,.0f}'.format(p.price_monthly)"/></b> / month
-                                <t t-if="first and p.price_onetime"><br/>+ ₦<span t-out="'{:,.0f}'.format(p.price_onetime)"/> one-time setup</t></p>
+                                <br/><small class="text-muted">Setup and onboarding available on request</small></p>
                             <a t-attf-href="/hotel/subscribe/#{p.code}" class="btn btn-primary">Pay with Paystack</a>
+                            <a t-attf-href="/hotel/activate-request/#{p.code}" class="btn btn-outline-secondary mt-2 d-block">Contact us to activate</a>
                         </div></div>
                     </div>
                 </div>

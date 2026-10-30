@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hotel_license_activate_view_form" model="ir.ui.view">
+        <field name="name">hotel.license.activate.form</field>
+        <field name="model">hotel.license.activate</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="code" placeholder="Paste the activation code from your provider"/>
+                </group>
+                <footer>
+                    <button name="action_activate" string="Activate" type="object" class="btn-primary"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="hotel_license_activate_action" model="ir.actions.act_window">
+        <field name="name">Activate License</field>
+        <field name="res_model">hotel.license.activate</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="hotel_license_view_form" model="ir.ui.view">
+        <field name="name">hotel.license.form</field>
+        <field name="model">hotel.license</field>
+        <field name="arch" type="xml">
+            <form create="0" delete="0" edit="0">
+                <header>
+                    <button name="%(hotel_license_activate_action)d" string="Enter Activation Code" groups="base.group_system"
+                            type="action" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="package"/>
+                            <field name="status" widget="badge"
+                                   decoration-success="status == 'active'"
+                                   decoration-danger="status == 'expired'"/>
+                            <field name="days_left"/>
+                        </group>
+                        <group>
+                            <field name="expires_at"/>
+                            <field name="trial_start"/>
+                            <field name="install_id"/>
+                        </group>
+                    </group>
+                    <group string="Included in your package">
+                        <field name="features_text" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hotel_license_open_action" model="ir.actions.server">
+        <field name="name">Hotel License</field>
+        <field name="model_id" ref="model_hotel_license"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_open()</field>
+    </record>
+
+    <menuitem id="menu_hotel_license" name="Hotel License" parent="menu_hotel_root" sequence="95"
+              action="hotel_license_open_action" groups="base.group_system"/>
+    <record id="menu_hotel_license" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6, 0, [ref('base.group_system')])]"/>
+    </record>
+
+    <record id="hotel_booking_view_form_license" model="ir.ui.view">
+        <field name="name">hotel.booking.form.license</field>
+        <field name="model">hotel.booking</field>
+        <field name="inherit_id" ref="hotel_booking_view_form_billing"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <field name="has_billing" invisible="1"/>
+                <div class="alert alert-warning" role="alert" invisible="not license_notice">
+                    <field name="license_notice" readonly="1"/>
+                </div>
+            </xpath>
+            <xpath expr="//button[@name='action_create_invoice']" position="attributes">
+                <attribute name="invisible">state not in ('checked_in', 'checked_out') or has_live_invoice or not has_billing</attribute>
+            </xpath>
+            <xpath expr="//page[@name='folio']" position="attributes">
+                <attribute name="invisible">not has_billing</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

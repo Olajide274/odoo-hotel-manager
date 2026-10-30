@@ -7,10 +7,10 @@
             <field name="sequence">1</field>
             <field name="max_rooms">8</field>
             <field name="max_users">1</field>
-            <field name="trial_days">7</field>
+            <field name="trial_days">3</field>
             <field name="price_monthly">0</field>
             <field name="price_onetime">0</field>
-            <field name="description">7-day free trial to explore the system</field>
+            <field name="description">3-day free trial to explore the system</field>
         </record>
 
         <record id="plan_starter" model="hotel.plan">

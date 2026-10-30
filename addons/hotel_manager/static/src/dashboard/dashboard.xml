@@ -16,6 +16,15 @@
                     </div>
                 </div>
 
+                <div t-if="state.d.booking_url" class="hd-card" style="margin-bottom:16px">
+                    <h3>Guest booking link</h3>
+                    <p class="hd-sub">Share this on WhatsApp, Instagram or your Google profile. Guests can book without a website.</p>
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px">
+                        <code t-out="state.d.booking_url" style="word-break:break-all"/>
+                        <button class="hd-btn" t-on-click="copyLink"><t t-if="state.copied">Copied</t><t t-else="">Copy link</t></button>
+                    </div>
+                </div>
+
                 <div class="hd-grid">
                     <div class="hd-card hd-k1"><span>Arrivals today</span><b t-out="state.d.arrivals"/></div>
                     <div class="hd-card hd-k2"><span>Departures today</span><b t-out="state.d.departures"/></div>

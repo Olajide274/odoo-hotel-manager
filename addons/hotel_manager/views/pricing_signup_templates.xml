@@ -7,7 +7,7 @@
                 <section class="hm-hero">
                     <span class="hm-eyebrow">Hotel Manager</span>
                     <h1>Run your hotel without the paperwork</h1>
-                    <p>Bookings, rooms, billing and reports in one place. Start free for 7 days, no card needed.</p>
+                    <p>Bookings, rooms, billing and reports in one place. Start free for 3 days, no card needed.</p>
                 </section>
                 <div class="hm-grid">
                     <t t-foreach="cards" t-as="c">

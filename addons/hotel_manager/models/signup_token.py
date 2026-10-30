@@ -60,7 +60,7 @@ class HotelSignupToken(models.Model):
         company = user.company_id
         plan = company.hotel_plan_id
         if plan.code == 'free':
-            company.trial_end_date = fields.Date.today() + timedelta(days=plan.trial_days or 7)
+            company.trial_end_date = fields.Date.today() + timedelta(days=plan.trial_days or 3)
         rec.revoked = True
         return user
 
