@@ -149,7 +149,7 @@ Full-Stack Software Engineer, Founder of Swift Digital Services
 
 - GitHub: <https://github.com/Olajide274>
 - LinkedIn: <https://www.linkedin.com/in/michael-olajide-david-b27859383>
-- Portfolio: <https://swift-portfolio-rho.vercel.app>
+- Portfolio: <https://michael-olajide-portfolio.vercel.app>
 
 ---
 
